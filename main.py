@@ -1,9 +1,17 @@
 from tkinter import *
 
-root = Tk() # Creates the window
+# Creates the window
+root = Tk()
+root.title("Grant's task manager")
 
-myLabel = Label(root, text="Hello World!") # Creating label widget
+# Sets up user input for creating tasks
+e = Entry(root,width= 50)
+e.grid(row= 0,column= 0)
+e.insert(0, "Enter your tasks: ")
 
-myLabel.pack() # Shoving it on the screen
+# Creates button next to the input taker.
+myButton = Button(background="black")
+myButton.grid(row = 0, column=1)
 
-root.mainloop() # Displays the window, loops constantly
+# Creates the main window and continously runs.
+root.mainloop()
