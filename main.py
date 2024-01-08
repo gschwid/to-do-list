@@ -11,19 +11,26 @@ root.title("Grant's task manager")
 def createTasks():
     global rowCount
     task = e.get()
-    myLabel = Label(text=task)
-    myLabel.grid(row=rowCount, column=0)
-    rowCount += 1 
-    
+    if len(task) != 0 and task != "Enter your tasks: ":
+        myTask = Label(text=task) 
+        myTask.grid(row=rowCount, column=0) # Adding task to the to-do-list
+        taskButton = Button(background="black")
+        taskButton.grid(row=rowCount, column=1) # Adding button to the to-do-list that will remove the task
+        clear(e) # Clears what the user inputs as a task.
+        rowCount += 1 
 
+# Clears what is in the entry bar
+def clear(entry:Entry):
+    entry.delete(0,len(entry.get())) # First param is start, second is end.  
+    
 # Sets up user input for creating tasks
 e = Entry(root,width= 50)
 e.grid(row= 0,column= 0)
 e.insert(0, "Enter your tasks: ")
 
 # Creates button next to the input taker.
-myButton = Button(background="black",command=createTasks)
-myButton.grid(row = 0, column=1)
+inputButton = Button(background="black",command=createTasks)
+inputButton.grid(row = 0, column=1)
 
 # Creates the main window and continously runs.
 root.mainloop()
