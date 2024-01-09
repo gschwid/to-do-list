@@ -1,4 +1,5 @@
 from tkinter import *
+import time
 
 # Keeps track of which row to add tasks to.
 rowCount = 1
