@@ -1,4 +1,5 @@
 from tkinter import *
+import csv
 
 rowCount = 1 # Variable to keep track of the amount of rows needed in the task manager.
 allTheTasks = {} # For storing each of the tasks
@@ -9,9 +10,24 @@ def login():
     loginPage = Toplevel()
     loginPage.title("Login")
     usernameLabel = Label(loginPage, text="Username  ").grid(row = 0, column=0)
-    usernameInput = Entry(loginPage,width=20).grid(row = 0, column=1)
+    usernameInput = Entry(loginPage,width=20)
+    usernameInput.grid(row = 0, column=1)
     PasswordLabel = Label(loginPage, text="Password  ").grid(row = 1, column=0)
-    PasswordInput = Entry(loginPage,width=20).grid(row = 1, column=1)
+    PasswordInput = Entry(loginPage,width=20)
+    PasswordInput.grid(row = 1, column=1) 
+    makeAccount = Button(loginPage,text="Done",command=lambda: verifyAccount(usernameInput.get(),PasswordInput.get())).grid(row=2) # Button that user clicks when they are done.
+
+# Verifies that the the account information put into the login page is correct. 
+def verifyAccount(username, password):
+    try:
+        print("balls")
+        f = open(username + ".csv", "r") # Adds the .csv extension and opens it.
+        reader_obj = csv.reader(f)
+        for row in reader_obj:
+            for column in row:
+                pass
+    except(FileNotFoundError): # If file does not exist this is called.
+        print("Incorrect username")
 
 # Creates the file to store data.
 def createFile(username, password, win):
