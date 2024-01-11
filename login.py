@@ -15,17 +15,20 @@ def login():
     PasswordLabel = Label(loginPage, text="Password  ").grid(row = 1, column=0)
     PasswordInput = Entry(loginPage,width=20)
     PasswordInput.grid(row = 1, column=1) 
-    makeAccount = Button(loginPage,text="Done",command=lambda: verifyAccount(usernameInput.get(),PasswordInput.get())).grid(row=2) # Button that user clicks when they are done.
+    makeAccount = Button(loginPage,text="Done",command=lambda: verifyAccount(usernameInput.get(),PasswordInput.get(),loginPage)).grid(row=2) # Button that user clicks when they are done.
 
 # Verifies that the the account information put into the login page is correct. 
-def verifyAccount(username, password):
+def verifyAccount(username, password, win):
     try:
-        print("balls")
         f = open(username + ".csv", "r") # Adds the .csv extension and opens it.
         reader_obj = csv.reader(f)
-        for row in reader_obj:
-            for column in row:
-                pass
+        tasksAndPassword = next(reader_obj) # Gets the row with all this info.
+        f.close()
+        if password != tasksAndPassword[0]: # Case where the password inputted is incorrect.
+            print("wrong password")
+        else: # Case where password inputted is correct.
+            win.destroy()
+            createTaskManager(username + ".csv", username, tasksAndPassword) 
     except(FileNotFoundError): # If file does not exist this is called.
         print("Incorrect username")
 
@@ -38,7 +41,7 @@ def createFile(username, password, win):
         f.write(password+",")
         f.close()
         win.destroy() # Closes the create account window.
-        createTaskManager(username + ".csv", username)
+        createTaskManager(username + ".csv", username, [])
         
 # Creates the create account window.
 def createAccount():
@@ -81,7 +84,8 @@ def clear(entry:Entry):
     entry.delete(0,len(entry.get())) # First param is start, second is end.  
 
 # Initializes the task manager.
-def createTaskManager(csvFile, name):
+def createTaskManager(csvFile, name, userTasks):
+    global rowCount
     root.title(name + "'s task manager")
     # Wipes the buttons originally on the root winodw.
     new_user.destroy()
@@ -94,6 +98,16 @@ def createTaskManager(csvFile, name):
     inputButton = Button(background="black",command=lambda: createTasks(e))
     inputButton.grid(row = 0, column=1)
     root.protocol("WM_DELETE_WINDOW", lambda : onClosing(csvFile)) # Makes it so the onClosing function is called when root window is closed after it has become the task manager.
+    # Fills in the task manager if user already has data that needs to be imported.
+    if len(userTasks) >= 1:
+        for i in range(len(userTasks) - 1): # ALways saves an empty slot at the end. 
+            if i != 0: # Skips past the password
+                myTask = Label(text=userTasks[i])
+                myTask.grid(row=rowCount, column=0) # Adding task to the to-do-list
+                taskButton = Button(background="black", command=lambda: removeTask(taskButton))
+                taskButton.grid(row=rowCount, column=1) # Adding button to the to-do-list that will remove the task
+                allTheTasks[taskButton] = myTask # Adds the task to the dictionary, allowing it to be deleted later.
+                rowCount += 1
 
 # Function that writes all current tasks to the csv file. 
 def onClosing(csv):
